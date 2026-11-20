@@ -1,0 +1,11 @@
+{
+  "name": "akinsanya-portfolio-design-3",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

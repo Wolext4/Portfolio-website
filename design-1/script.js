@@ -1,5 +1,40 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
+const ticker = document.querySelector(".ticker-track");
+const tickerTemplate = ticker?.querySelector(".ticker-group");
+
+if (ticker && tickerTemplate) {
+  const buildTickerLoop = () => {
+    ticker.classList.remove("is-ready");
+    ticker.querySelectorAll("[data-ticker-clone]").forEach((clone) => clone.remove());
+
+    const groupWidth = tickerTemplate.getBoundingClientRect().width;
+    const viewportWidth = ticker.parentElement.getBoundingClientRect().width;
+
+    if (groupWidth === 0 || viewportWidth === 0) return;
+
+    const groupCount = Math.ceil(viewportWidth / groupWidth) + 1;
+    for (let index = 1; index < groupCount; index += 1) {
+      const clone = tickerTemplate.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      clone.dataset.tickerClone = "true";
+      ticker.append(clone);
+    }
+
+    ticker.style.setProperty("--ticker-shift", `-${groupWidth}px`);
+    ticker.style.setProperty("--ticker-duration", `${groupWidth / 40}s`);
+    requestAnimationFrame(() => ticker.classList.add("is-ready"));
+  };
+
+  document.fonts.ready.then(buildTickerLoop);
+
+  let resizeTimeout;
+  window.addEventListener("resize", () => {
+    window.clearTimeout(resizeTimeout);
+    resizeTimeout = window.setTimeout(buildTickerLoop, 120);
+  });
+}
+
 const menuButton = document.querySelector(".menu-button");
 const navLinks = document.querySelector(".nav-links");
 
